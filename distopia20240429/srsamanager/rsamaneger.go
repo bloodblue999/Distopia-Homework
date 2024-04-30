@@ -43,6 +43,7 @@ func Encrypt(msg string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
 	return base64.StdEncoding.EncodeToString(msgBytesEncrypted), nil
 }
 
@@ -56,10 +57,10 @@ func Decrypt(msg string) (string, error) {
 		return "", err
 	}
 
-	msgDesencryptedBytes, err := rsa.DecryptOAEP(keys.hashFunc, rand.Reader, keys.privateKey, msgEncryptedBytes, nil)
+	msgDecryptedBytes, err := rsa.DecryptOAEP(keys.hashFunc, rand.Reader, keys.privateKey, msgEncryptedBytes, nil)
 	if err != nil {
 		return "", err
 	}
 
-	return string(msgDesencryptedBytes), nil
+	return string(msgDecryptedBytes), nil
 }
