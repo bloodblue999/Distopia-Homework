@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/bloodblue999/srsamanager"
+	"github.com/bloodblue999/distopia20240429/srsamanager"
 	"io"
 	"net/http"
 )

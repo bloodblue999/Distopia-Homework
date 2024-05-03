@@ -10,13 +10,13 @@ import (
 	"hash"
 )
 
-type Keys struct {
+type keys struct {
 	publicKey  *rsa.PublicKey
 	privateKey *rsa.PrivateKey
 	hashFunc   hash.Hash
 }
 
-var keys Keys
+var keysValue keys
 
 func GenerateRSAKeyPair() {
 	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
@@ -27,7 +27,7 @@ func GenerateRSAKeyPair() {
 
 	publicKey := &privateKey.PublicKey
 
-	keys = Keys{
+	keysValue = keys{
 		publicKey:  publicKey,
 		privateKey: privateKey,
 		hashFunc:   sha256.New(),
@@ -35,11 +35,11 @@ func GenerateRSAKeyPair() {
 }
 
 func Encrypt(msg string) (string, error) {
-	if keys.publicKey == nil {
+	if keysValue.publicKey == nil {
 		return "", errors.New("public key is nil")
 	}
 
-	msgBytesEncrypted, err := rsa.EncryptOAEP(keys.hashFunc, rand.Reader, keys.publicKey, []byte(msg), nil)
+	msgBytesEncrypted, err := rsa.EncryptOAEP(keysValue.hashFunc, rand.Reader, keysValue.publicKey, []byte(msg), nil)
 	if err != nil {
 		return "", err
 	}
@@ -48,7 +48,7 @@ func Encrypt(msg string) (string, error) {
 }
 
 func Decrypt(msg string) (string, error) {
-	if keys.privateKey == nil {
+	if keysValue.privateKey == nil {
 		return "", errors.New("private key is nil")
 	}
 
@@ -57,7 +57,7 @@ func Decrypt(msg string) (string, error) {
 		return "", err
 	}
 
-	msgDecryptedBytes, err := rsa.DecryptOAEP(keys.hashFunc, rand.Reader, keys.privateKey, msgEncryptedBytes, nil)
+	msgDecryptedBytes, err := rsa.DecryptOAEP(keysValue.hashFunc, rand.Reader, keysValue.privateKey, msgEncryptedBytes, nil)
 	if err != nil {
 		return "", err
 	}
